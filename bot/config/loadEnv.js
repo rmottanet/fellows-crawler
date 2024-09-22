@@ -4,10 +4,10 @@
  */
 function loadAccessToken() {
   
-  var token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
+  const token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
   
   if (!token) {
-    throw new Error('Token de acesso não encontrado. Certifique-se de configurar o token de acesso antes de usar este script.');
+    throw new Error('Access token not found. -Make sure you configure the access token before using this script.');
   }
   
   return token;
