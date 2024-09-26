@@ -1,35 +1,30 @@
 /**
  * Function to retrieve all users that the authenticated user is following.
- * 
- * Returns a list of usernames of the users being followed.
- * 
- * @returns {Array|null} - List of usernames of the users being followed, or null if an error occurs.
+ *
+ * Returns a list of usernames of the users being followed, or null if an error occurs.
+ *
+ * @returns {Promise<Array|null>} - A promise that resolves to a list of usernames
+ *                                 of the users being followed, or null if an error occurs.
  */
-function getFollowing() {
-	
+async function getFollowing() {
+  
   try {
-
-    var followingData = fetcherData(url_flwing);
+    
+    const followingData = await fetchGitHubData(url_flwing);
 
     if (!followingData) {
       Logger.log('Error retrieving following.');
       return null;
     }
 
-    var followingUsers = followingData.filter(function(user) {
-      return user.type === 'User';
-    });
-
-    var following = followingUsers.map(function(user) {
-      return user.login;
-    });
+    const followingUsers = followingData.filter(user => user.type === 'User');
+    const following = followingUsers.map(user => user.login);
 
     return following;
     
   } catch (error) {
-		
     Logger.log('Error retrieving following:', error);
     return null;
-    
   }
+  
 }

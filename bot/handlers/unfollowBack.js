@@ -9,32 +9,25 @@
  * Logs any errors that occur during the process.
  * Throws the error to be handled at a higher level.
  */
-function unfollowBack() {
-	
+async function unfollowBack() {
+  
   try {
+    
+    const allFollowers = await getFollowers();
+    const allFollowing = await getFollowing();
 
-    var followers = getFollowers();
-
-    var following = getFollowing();
-
-    if (following.length === 0) {
+    if (allFollowing.length === 0) {
       Logger.log('No following found.');
       return;
     }
 
-    var unfollowCandidates = following.filter(function(user) {
-      return !followers.includes(user) && !excludedUsers.includes(user);
-    });
+    const unfollowCandidates = allFollowing.filter(user => !allFollowers.includes(user) && !excludedUsers.includes(user));
 
-    for (var user of unfollowCandidates) {
-      unfollowUser(user);
-      Logger.log('Unfollowed user: ' + user);
-    }
+    await Promise.all(unfollowCandidates.map(unfollowUser));
     
   } catch (error) {
-	  
-    Logger.log('Error unfollowing back users: ' + error);
-    throw error; 
-    
+    Logger.log('Error unfollowing back users:' + error);
+    throw error;
   }
+  
 }

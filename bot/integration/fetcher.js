@@ -1,49 +1,42 @@
 /**
- * Generic function to make requests to the GitHub API.
- * Receives a specific GitHub API URL as a parameter.
- * Returns the response data from the request.
+ * Fetches data from a GitHub API endpoint, handling pagination and potential errors.
+ *
+ * @param {string} url - The URL of the GitHub API endpoint to fetch data from.
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of data objects, or rejects with an error if the request fails.
  */
-function fetcherData(url) {
-	
-  try {
+async function fetchGitHubData(url) {
 
-    var accessToken = loadAccessToken();
+  const accessToken = loadAccessToken();
+
+  const allData = [];
+  
+  let page = 1;
+
+  while (true) {
     
-    var allData = [];
-
-    var page = 1;
-
-    while (true) {
-
-      var pageUrl = url + "?page=" + page;
-
-      var response = UrlFetchApp.fetch(pageUrl, {
-        headers: {
-          "Authorization": "Bearer " + accessToken
-        }
-      });
-
-      if (response.getResponseCode() !== 200) {
-        throw new Error('Erro ao fazer solicitação à API do GitHub. Código de resposta: ' + response.getResponseCode());
+    const pageUrl = `${url}?page=${page}`;
+    
+    const response = await UrlFetchApp.fetch(pageUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
       }
+    });
 
-      var data = JSON.parse(response.getContentText());
-
-      if (data.length === 0) {
-        break;
-      }
-
-      allData = allData.concat(data);
-
-      page++;
+    if (response.getResponseCode() !== 200) {
+      throw new Error(`API request failed with status ${response.getResponseCode()}: ${response.getContentText()}`);
     }
 
-    return allData;
+    const data = JSON.parse(response.getContentText());
     
-  } catch (error) {
+    if (data.length === 0) {
+      break;
+    }
 
-    Logger.log('Erro ao fazer solicitação à API do GitHub:', error);
-    return null; 
+    allData.push(...data);
+    page++;
     
   }
+  
+  return allData;
+  
 }
