@@ -1,11 +1,11 @@
 /**
- * Function to check if a specific user is being followed.
- * 
+ * Asynchronously checks if a specific user is being followed.
+ *
  * @param {string} username - The username of the user to check.
- * @returns {boolean} - True if the user is followed, false otherwise.
+ * @returns {Promise<boolean>} - A Promise that resolves to `true` if the user is followed, `false` otherwise, or rejects with an error.
  */
-function isFollowed(username) {
-	
+async function isFollowed(username) {
+  
   try {
 
     var apiUrl = url_flwing + "/" + username;
@@ -16,12 +16,12 @@ function isFollowed(username) {
       },
       muteHttpExceptions: true 
     });
-
+    
     return response.getResponseCode() === 204;
     
   } catch (error) {
-	  
-    Logger.log('Error checking if user is followed:', username, error);
+    
+    Logger.log('Error checking if user is followed: ' + username + " " + error.message);
     return false; 
     
   }

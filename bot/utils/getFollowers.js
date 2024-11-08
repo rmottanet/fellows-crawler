@@ -7,7 +7,7 @@ async function getFollowers() {
   
   try {
     
-    const followersData = await fetchGitHubData(url_flwers);
+    const followersData = await GithubHttpApp.fetcher(GH_TOKEN, url_flwers);
 
     if (!followersData) {
       Logger.log('Error retrieving followers.');
@@ -19,7 +19,7 @@ async function getFollowers() {
     return followers;
     
   } catch (error) {
-    Logger.log('Error retrieving followers:', error);
+    Logger.log('Error retrieving followers: ' + error);
     return null;
   }
   

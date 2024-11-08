@@ -10,7 +10,7 @@ async function getFollowing() {
   
   try {
     
-    const followingData = await fetchGitHubData(url_flwing);
+    const followingData = await GithubHttpApp.fetcher(GH_TOKEN, url_flwing);
 
     if (!followingData) {
       Logger.log('Error retrieving following.');
@@ -23,7 +23,7 @@ async function getFollowing() {
     return following;
     
   } catch (error) {
-    Logger.log('Error retrieving following:', error);
+    Logger.log('Error retrieving following: ' + error);
     return null;
   }
   

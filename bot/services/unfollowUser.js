@@ -12,12 +12,7 @@ async function unfollowUser(username) {
     
     const apiUrl = url_flwing + "/" + username;
     
-    const response = await UrlFetchApp.fetch(apiUrl, {
-      method: "DELETE",
-      headers: {
-        "Authorization": "Bearer " + loadAccessToken()
-      }
-    });
+    const response = await GithubHttpApp.deleter(GH_TOKEN, apiUrl)
 
     if (response.getResponseCode() !== 204) {
       throw new Error('Error unfollowing user: ' + username + '. Response code: ' + response.getResponseCode());
