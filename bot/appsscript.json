@@ -1,6 +1,13 @@
 {
   "timeZone": "America/New_York",
   "dependencies": {
+    "libraries": [
+      {
+        "userSymbol": "GithubHttpApp",
+        "version": "1",
+        "libraryId": "1suWVnfT6mr4PlgV2-djY0DhVZW3LRuV1zR10SWrk0IN2wRHtTwuasinq"
+      }
+    ]
   },
   "exceptionLogging": "STACKDRIVER",
   "runtimeVersion": "V8"

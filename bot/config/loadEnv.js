@@ -12,3 +12,5 @@ function loadAccessToken() {
   
   return token;
 }
+
+const GH_TOKEN = loadAccessToken()

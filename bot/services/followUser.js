@@ -12,12 +12,7 @@ async function followUser(username) {
       
       const apiUrl = url_flwing + "/" + username;
       
-      const response = await UrlFetchApp.fetch(apiUrl, {
-        method: "PUT",
-        headers: {
-          "Authorization": "Bearer " + loadAccessToken()
-        }
-      });
+      const response = await GithubHttpApp.putter(GH_TOKEN, apiUrl, payload = null);
 
       if (response.getResponseCode() !== 204) {
         throw new Error('Error following user: ' + username + '. Response code: ' + response.getResponseCode());
