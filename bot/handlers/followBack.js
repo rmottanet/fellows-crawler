@@ -21,7 +21,9 @@ async function followBack() {
     }
 
     // Create an array of promises to check if each follower is already followed
-    const isFollowedPromises = allFollowers.map(follower => isFollowed(follower));
+    const isFollowedPromises = allFollowers.map(async (follower) => {
+      return await isFollowed(follower);
+    });
 
     // Wait for the result of all checks
     const isFollowedResults = await Promise.all(isFollowedPromises);
