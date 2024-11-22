@@ -1,14 +1,14 @@
 {
   "timeZone": "America/New_York",
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
   "dependencies": {
     "libraries": [
       {
-        "userSymbol": "GithubHttpApp",
-        "version": "1",
-        "libraryId": "1suWVnfT6mr4PlgV2-djY0DhVZW3LRuV1zR10SWrk0IN2wRHtTwuasinq"
+        "userSymbol": "GithubRestApp",
+        "libraryId": "1raHmOWjtCbXhkW5_zEVrBFXZROsbF7j_wxJ39cTUkUnpSV1QdA8QtaoL",
+        "version": "1"
       }
     ]
-  },
-  "exceptionLogging": "STACKDRIVER",
-  "runtimeVersion": "V8"
+  }
 }
