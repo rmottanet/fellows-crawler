@@ -1,48 +1,46 @@
 /**
- * Function to follow back followers.
- * 
- * Retrieves the list of followers.
- * Checks if the list of followers is empty.
- * Iterates over each follower.
- * Checks if the follower is already being followed.
- * Follows the follower if not already followed.
- * Logs any errors that occur during the process.
- * Throws the error to be handled at a higher level if necessary.
+ * Follows back followers who aren't already followed.
+ *
+ * Retrieves the list of followers, extracts usernames, and checks if any are not already followed.
+ * Follows any unfollowed user and logs the success or encountered error.
+ * Throws errors for handling at a higher level.
+ *
+ * @throws {Error} If an error occurs during the process.
  */
 async function followBack() {
   
   try {
     
-    const allFollowers = await getFollowers();
-
-    if (allFollowers === null || allFollowers.length === 0) {
+    const followersData = await GithubRestApp.getFollowers(GH_TOKEN);
+    
+    if (followersData === null || followersData.length === 0) {
       Logger.log('No followers found.');
       return;
     }
+    
+    const followers = followersData.map(follower => follower.login);
 
-    // Create an array of promises to check if each follower is already followed
-    const isFollowedPromises = allFollowers.map(async (follower) => {
-      return await isFollowed(follower);
+    // Use filter to find usernames of users who aren't followed
+    const unfollowedUsers = followers.filter(async (follower) => {
+      const isFollowedResult = await GithubRestApp.isFollowedUser(GH_TOKEN, follower);
+      return !isFollowedResult.success; // Filter based on success property
     });
 
-    // Wait for the result of all checks
-    const isFollowedResults = await Promise.all(isFollowedPromises);
+    // Wait for all unfollowed user checks to complete before following
+    const usersToFollow = await Promise.all(unfollowedUsers);
 
-    // Iterate over followers and corresponding results
-    for (let i = 0; i < allFollowers.length; i++) {
-      
-      const follower = allFollowers[i];
-      
-      if (!isFollowedResults[i]) {
-        await followUser(follower);
-        Logger.log('Followed user: ' + follower);
+    // Follow each unfollowed user and log success or error
+    for (const user of usersToFollow) {
+      try {
+        await GithubRestApp.followUser(GH_TOKEN, user);
+        Logger.log(`Followed user: ${user}`);
+      } catch (error) {
+        Logger.log(`Error following user: ${user} ` + error);
       }
-      
     }
     
-  } catch (error) {    
+  } catch (error) {
     Logger.log('Error following back followers: ' + error);
-    throw error;
   }
   
 }

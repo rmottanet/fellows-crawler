@@ -13,21 +13,35 @@ async function unfollowBack() {
   
   try {
     
-    const allFollowers = await getFollowers();
-    const allFollowing = await getFollowing();
+    // Retrieving and processing followers
+    const followersData = await GithubRestApp.getFollowers(GH_TOKEN);
 
-    if (allFollowing.length === 0) {
-      Logger.log('No following found.');
+    if (followersData === null || followersData.length === 0) {
+      Logger.log('No followers found.');
       return;
     }
+    
+    const allFollowers = followersData.map(follower => follower.login);
 
+    // Retrieving and processing following
+    const followingData = await GithubRestApp.getFollowing(GH_TOKEN);
+ 
+    if (followingData === null || followingData.length === 0) {
+        Logger.log('No following found.');
+        return;
+    }
+    
+    const followingUsers = followingData.filter(user => user.type === 'User');
+    
+    const allFollowing = followingUsers.map(user => user.login);
+
+    // Unfollow processed data
     const unfollowCandidates = allFollowing.filter(user => !allFollowers.includes(user) && !excludedUsers.includes(user));
 
-    await Promise.all(unfollowCandidates.map(unfollowUser));
+    await Promise.all(unfollowCandidates.map(user => GithubRestApp.unfollowUser(GH_TOKEN, user)));
     
   } catch (error) {
     Logger.log('Error unfollowing back users:' + error);
-    throw error;
   }
-  
+
 }
