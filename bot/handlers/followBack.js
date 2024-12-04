@@ -22,7 +22,7 @@ async function followBack() {
 
     // Use filter to find usernames of users who aren't followed
     const unfollowedUsers = followers.filter(async (follower) => {
-      const isFollowedResult = await GithubRestApp.isFollowedUser(GH_TOKEN, follower);
+      const isFollowedResult = await GithubRestApp.isFollowedUser(follower, GH_TOKEN);
       return !isFollowedResult.success; // Filter based on success property
     });
 
@@ -32,7 +32,7 @@ async function followBack() {
     // Follow each unfollowed user and log success or error
     for (const user of usersToFollow) {
       try {
-        await GithubRestApp.followUser(GH_TOKEN, user);
+        await GithubRestApp.followUser(user, GH_TOKEN);
         Logger.log(`Followed user: ${user}`);
       } catch (error) {
         Logger.log(`Error following user: ${user} ` + error);

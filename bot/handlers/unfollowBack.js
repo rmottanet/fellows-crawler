@@ -38,7 +38,7 @@ async function unfollowBack() {
     // Unfollow processed data
     const unfollowCandidates = allFollowing.filter(user => !allFollowers.includes(user) && !excludedUsers.includes(user));
 
-    await Promise.all(unfollowCandidates.map(user => GithubRestApp.unfollowUser(GH_TOKEN, user)));
+    await Promise.all(unfollowCandidates.map(user => GithubRestApp.unfollowUser(user, GH_TOKEN)));
     
   } catch (error) {
     Logger.log('Error unfollowing back users:' + error);
